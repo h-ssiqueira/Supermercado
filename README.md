@@ -30,6 +30,7 @@ O projeto em si tem o objetivo de controlar o fluxo de mercadorias, sendo desde 
 * [Fluxograma](diagramas/Fluxograma.pdf)
 * [MER](diagramas/MER.pdf)
 * [MVC](diagramas/MVC.pdf)
+* [Prototipação](UI-UX)
 
 ## Repositórios
 * [Banco de dados](https://github.com/alcidesbeato/Redes-Banco)
