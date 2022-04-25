@@ -23,7 +23,7 @@ Este repositório é responsável pela documentação do projeto.
 O projeto em si tem o objetivo de controlar o fluxo de mercadorias, sendo desde a chegada no supermercado até a saída no caixa.
 
 ## Documentação
-* [APIs](docs/swagger.yaml)
+* [APIs](docs/APIs.yaml)
 * [Arquitetura Sistêmica](diagramas/Arquitetura%20sistêmica.pdf)
 * [Casos de uso](diagramas/Casos%20de%20uso.pdf)
 * [DER](diagramas/DER.pdf)
