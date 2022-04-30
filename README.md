@@ -33,7 +33,7 @@ O projeto em si tem o objetivo de controlar o fluxo de mercadorias, sendo desde 
 * [Prototipação](UI-UX)
 
 ## Repositórios
-* [Banco de dados](https://github.com/alcidesbeato/Redes-Banco)
+* [Banco de dados](https://github.com/alcidesbeato/Redes-backend)
 * [Aplicativo](https://github.com/RichardCLopes/QRCode_Reader)
 * [Sistemas Web](https://github.com/alcidesbeato/Sistema-web-Almoxarifado)
 
