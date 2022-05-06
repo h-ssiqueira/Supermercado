@@ -37,21 +37,15 @@ paths:
           description: "Entrada inválida"
         "500":
           description: "Erro interno de servidor"
-  /estoque/findByLocation:
+          
     get:
       tags:
       - "Database"
-      summary: "Buscar estoque por localização"
-      description: "Busca um estoque com base no atributo de localização"
-      operationId: "findStockByLocation"
+      summary: "Buscar todo o estoque"
+      description: "Busca todo o estoque"
+      operationId: "findStocks"
       produces:
       - "application/json"
-      parameters:
-      - name: "id"
-        in: "query"
-        description: "Localização estoque"
-        type: "string"
-        required: true
       responses:
         "200":
           description: "Operação bem sucedida"
@@ -62,6 +56,7 @@ paths:
           description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
+          
   /estoque/{stockId}:
     put:
       tags:
@@ -79,6 +74,10 @@ paths:
         description: "Informações relativas ao estoque"
         type: "integer"
         required: true
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/PutStock"
       responses:
         "201":
           description: "Estoque atualizado com sucesso"
@@ -88,6 +87,7 @@ paths:
           description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
+          
     get:
       tags:
       - "Database"
@@ -101,7 +101,7 @@ paths:
         in: "path"
         description: "Id do estoque para buscar"
         required: true
-        type: "string"
+        type: "integer"
       responses:
         "200":
           description: "Operação bem sucedida"
@@ -111,6 +111,9 @@ paths:
           description: "Id inválido"
         "404":
           description: "Estoque não encontrado"
+        "500":
+          description: "Erro interno de servidor"
+          
     delete:
       tags:
       - "Database"
@@ -120,15 +123,11 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
       - name: "stockId"
         in: "path"
         description: "Id do estoque a ser removido"
         required: true
-        type: "string"
+        type: "integer"
       responses:
         "201":
           description: "Estoque removido com sucesso"
@@ -136,6 +135,9 @@ paths:
           description: "Id inválido"
         "404":
           description: "Estoque não encontrado"
+        "500":
+          description: "Erro interno de servidor"
+          
   /local/:
     get:
       tags:
@@ -154,8 +156,11 @@ paths:
             additionalProperties:
               type: "integer"
               format: "int32"
+        "400":
+          description: "Id inválido"
         "500":
           description: "Erro interno de servidor"
+          
     post:
       tags:
       - "local"
@@ -170,42 +175,44 @@ paths:
         description: "Informações do local"
         required: true
         schema:
-          $ref: "#/definitions/Order"
+          $ref: "#/definitions/Local"
       responses:
         "201":
           description: "Local criado com sucesso"
           schema:
-            $ref: "#/definitions/Order"
+            $ref: "#/definitions/Local2"
         "400":
           description: "Request inválido"
         "500":
           description: "Erro interno de servidor"
-  /local/check/{localName}:
+          
+  /local/check/{localID}:
     get:
       tags:
       - "local"
-      summary: "Busca local por nome"
-      description: "Busca um local com base no nome"
-      operationId: "getLocalByName"
+      summary: "Busca local por id"
+      description: "Busca um local com base no id"
+      operationId: "getLocalByID"
       produces:
       - "application/json"
       parameters:
-      - name: "localName"
+      - name: "localID"
         in: "path"
-        description: "Nome do local a ser buscado"
+        description: "ID do local a ser buscado"
         required: true
-        type: "string"
+        type: "integer"
       responses:
         "200":
           description: "Ok"
           schema:
-            $ref: "#/definitions/Order"
+            $ref: "#/definitions/Local2"
         "400":
           description: "Request inválida"
         "404":
           description: "Local não encontrado"
         "500":
           description: "Erro interno de servidor"
+          
   /local/{localId}:
     delete:
       tags:
@@ -230,6 +237,7 @@ paths:
           description: "Local não encontrado"
         "500":
           description: "Erro interno de servidor"
+          
     put:
       tags:
       - "local"
@@ -246,11 +254,18 @@ paths:
         description: "Informações relativas ao local"
         type: "integer"
         required: true
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/PutLocal"
       responses:
         "200":
           description: "Local atualizado com sucesso"
+        "400":
+          description: "Id inválido"
         "500":
           description: "Erro interno de servidor"
+          
   /produto:
     post:
       tags:
@@ -266,12 +281,17 @@ paths:
         description: "Created user object"
         required: true
         schema:
-          $ref: "#/definitions/User"
+          $ref: "#/definitions/PostProduto"
       responses:
         "200":
           description: "Produto criado com sucesso"
+          schema:
+            $ref: "#/definitions/GetProduto"
+        "400":
+          description: "Request inválida"
         "500":
           description: "Erro interno de servidor"
+          
     get:
       tags:
       - "produto"
@@ -280,11 +300,21 @@ paths:
       operationId: "getProducts"
       produces:
       - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/GetProduto"
       responses:
         "200":
           description: "Produtos encontrados"
+        "404":
+          description: "Produto não encontrado"
         "500":
           description: "Erro interno de servidor"
+          
   ### Continua
   /user/createWithArray:
     post:
@@ -308,6 +338,7 @@ paths:
       responses:
         default:
           description: "successful operation"
+          
   /user/createWithList:
     post:
       tags:
@@ -330,6 +361,7 @@ paths:
       responses:
         default:
           description: "successful operation"
+          
   /user/login:
     get:
       tags:
@@ -367,6 +399,7 @@ paths:
               description: "date in UTC when token expires"
         "400":
           description: "Invalid username/password supplied"
+          
   /user/logout:
     get:
       tags:
@@ -381,6 +414,7 @@ paths:
       responses:
         default:
           description: "successful operation"
+          
   /user/{username}:
     get:
       tags:
@@ -406,6 +440,7 @@ paths:
           description: "Invalid username supplied"
         "404":
           description: "User not found"
+          
     put:
       tags:
       - "user"
@@ -432,6 +467,7 @@ paths:
           description: "Invalid user supplied"
         "404":
           description: "User not found"
+          
     delete:
       tags:
       - "user"
@@ -452,6 +488,7 @@ paths:
           description: "Invalid username supplied"
         "404":
           description: "User not found"
+          
 securityDefinitions:
   petstore_auth:
     type: "oauth2"
@@ -460,48 +497,43 @@ securityDefinitions:
     scopes:
       write:pets: "modify pets in your account"
       read:pets: "read your pets"
+      
   api_key:
     type: "apiKey"
     name: "api_key"
     in: "header"
+    
 definitions:
-  Order:
+  Local:
+    type: "object"
+    properties:
+      quantity:
+        type: "integer"
+        format: "int32"
+      localizacao:
+        type: "string"
+        
+  Local2:
     type: "object"
     properties:
       id:
-        type: "integer"
-        format: "int64"
-      petId:
         type: "integer"
         format: "int64"
       quantity:
         type: "integer"
         format: "int32"
-      shipDate:
+      localizacao:
         type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-        default: false
-    xml:
-      name: "Order"
-  Category:
+        
+  PutLocal:
     type: "object"
+    required:
+    - "name"
     properties:
-      id:
+      quantidade:
         type: "integer"
         format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
+
   User:
     type: "object"
     properties:
@@ -524,22 +556,18 @@ definitions:
         type: "integer"
         format: "int32"
         description: "User Status"
-    xml:
-      name: "User"
+
   stock:
     type: "object"
     required:
     - "name"
     properties:
-      id:
-        type: "string"
       localizacao:
         type: "string"
       quantidade:
         type: "integer"
         format: "int64"
-    xml:
-      name: "stock"
+
   ApiResponse:
     type: "object"
     properties:
@@ -549,4 +577,44 @@ definitions:
       type:
         type: "string"
       message:
+        type: "string"
+        
+  PutStock:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      quantidade:
+        type: "integer"
+        format: "int64"
+        
+  GetProduto:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      nome:
+        type: "string"
+      origem:
+        type: "string"
+      lote:
+        type: "string"
+      data_fabricacao:
+        type: "string"
+      data_validade:
+        type: "string"
+  
+  PostProduto:
+    type: "object"
+    properties:
+      nome:
+        type: "string"
+      origem:
+        type: "string"
+      lote:
+        type: "string"
+      data_fabricacao:
+        type: "string"
+      data_validade:
         type: "string"
