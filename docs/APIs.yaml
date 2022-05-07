@@ -1,25 +1,29 @@
 # Edit on https://editor.swagger.io/
 swagger: "2.0"
 info:
-  description: "This is a sample supermarket server."
+  description: "Fluxo de mercadorias em um supermercado."
   version: "1.0.0"
   title: "Redes Supermercado"
   license:
     name: "MIT"
     url: "https://opensource.org/licenses/MIT"
 tags:
-- name: "Database"
-  description: "Every API linked to relational database"
+- name: "Estoque"
+  description: "APIs de manipulação de estoques."
+- name: "Local"
+  description: "APIs de manipulação de locais."
+- name: "Produto"
+  description: "APIs de manipulação de produtos."
 schemes:
 - "http"
 paths:
   /estoque:
     post:
       tags:
-      - "Database"
+      - "Estoque"
       summary: "Cria um novo registro de estoque"
       description: "Adiciona um novo registro de estoque para o banco de dados"
-      operationId: "addEstoque"
+      operationId: "addStock"
       consumes:
       - "application/json"
       produces:
@@ -29,7 +33,7 @@ paths:
         name: "body"
         required: true
         schema:
-          $ref: "#/definitions/stock"
+          $ref: "#/definitions/PostStock"
       responses:
         "201":
           description: "Registro criado"
@@ -37,12 +41,11 @@ paths:
           description: "Entrada inválida"
         "500":
           description: "Erro interno de servidor"
-          
     get:
       tags:
-      - "Database"
+      - "Estoque"
       summary: "Buscar todo o estoque"
-      description: "Busca todo o estoque"
+      description: "Busca todas as informações do estoque interno"
       operationId: "findStocks"
       produces:
       - "application/json"
@@ -51,46 +54,15 @@ paths:
           description: "Operação bem sucedida"
           schema:
             items:
-              $ref: "#/definitions/stock"
+              $ref: "#/definitions/GetStock"
         "404":
           description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
-          
   /estoque/{stockId}:
-    put:
-      tags:
-      - "Database"
-      summary: "Atualizar estoque"
-      description: "Atualiza a quantidade de produtos do estoque"
-      operationId: "updateStock"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "stockId"
-        description: "Informações relativas ao estoque"
-        type: "integer"
-        required: true
-      - in: "body"
-        name: "body"
-        schema:
-          $ref: "#/definitions/PutStock"
-      responses:
-        "201":
-          description: "Estoque atualizado com sucesso"
-        "400":
-          description: "Id inválido"
-        "404":
-          description: "Estoque não encontrado"
-        "500":
-          description: "Erro interno de servidor"
-          
     get:
       tags:
-      - "Database"
+      - "Estoque"
       summary: "Busca estoque por Id"
       description: "Retorna um único registro de estoque"
       operationId: "getStockById"
@@ -102,21 +74,21 @@ paths:
         description: "Id do estoque para buscar"
         required: true
         type: "integer"
+        format: "int32"
       responses:
         "200":
           description: "Operação bem sucedida"
           schema:
-            $ref: "#/definitions/stock"
+            $ref: "#/definitions/GetStock"
         "400":
           description: "Id inválido"
         "404":
           description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
-          
     delete:
       tags:
-      - "Database"
+      - "Estoque"
       summary: "Remove um estoque"
       description: "Remove um registro de estoque com base em um Id"
       operationId: "deleteStock"
@@ -128,6 +100,7 @@ paths:
         description: "Id do estoque a ser removido"
         required: true
         type: "integer"
+        format: "int32"
       responses:
         "201":
           description: "Estoque removido com sucesso"
@@ -137,33 +110,72 @@ paths:
           description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
-          
-  /local/:
-    get:
+  /estoque/{stockId}/qtd:
+    put:
       tags:
-      - "local"
-      summary: "Retorna todos os locais"
-      description: "Retorna todos os locais registrados no sistema"
-      operationId: "getLocals"
+      - "Estoque"
+      summary: "Atualizar quantidade"
+      description: "Atualiza a quantidade de produtos do estoque"
+      operationId: "updateQuantityInStock"
+      consumes:
+      - "application/json"
       produces:
       - "application/json"
-      parameters: []
+      parameters:
+      - in: "path"
+        name: "stockId"
+        description: "Informações relativas ao estoque"
+        type: "integer"
+        format: "int32"
+        required: true
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/PutQuantityStock"
       responses:
-        "200":
-          description: "Operação bem sucedida"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
+        "201":
+          description: "Estoque atualizado com sucesso"
         "400":
           description: "Id inválido"
+        "404":
+          description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
-          
+  /estoque/{stockId}/loc:
+    put:
+      tags:
+      - "Estoque"
+      summary: "Atualizar localização"
+      description: "Atualiza a localização de produtos do estoque"
+      operationId: "updateLocalizationInStock"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "stockId"
+        description: "Informações relativas ao estoque"
+        type: "integer"
+        format: "int32"
+        required: true
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/PutLocalizationStock"
+      responses:
+        "201":
+          description: "Estoque atualizado com sucesso"
+        "400":
+          description: "Id inválido"
+        "404":
+          description: "Estoque não encontrado"
+        "500":
+          description: "Erro interno de servidor"
+  /local/:
     post:
       tags:
-      - "local"
+      - "Local"
       summary: "Cria local"
       description: "Cria um novo registro de local"
       operationId: "createLocal"
@@ -175,48 +187,63 @@ paths:
         description: "Informações do local"
         required: true
         schema:
-          $ref: "#/definitions/Local"
+          $ref: "#/definitions/PostLocal"
       responses:
         "201":
           description: "Local criado com sucesso"
           schema:
-            $ref: "#/definitions/Local2"
+            $ref: "#/definitions/GetLocal"
         "400":
           description: "Request inválido"
         "500":
           description: "Erro interno de servidor"
-          
-  /local/check/{localID}:
     get:
       tags:
-      - "local"
+      - "Local"
+      summary: "Retorna todos os locais"
+      description: "Retorna todos os locais registrados no sistema"
+      operationId: "getLocals"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Operação bem sucedida"
+          schema:
+            $ref: "#/definitions/GetLocal"
+        "400":
+          description: "Id inválido"
+        "500":
+          description: "Erro interno de servidor"
+  /local/{localId}:
+    get:
+      tags:
+      - "Local"
       summary: "Busca local por id"
       description: "Busca um local com base no id"
-      operationId: "getLocalByID"
+      operationId: "getLocalById"
       produces:
       - "application/json"
       parameters:
-      - name: "localID"
+      - name: "localId"
         in: "path"
         description: "ID do local a ser buscado"
         required: true
         type: "integer"
       responses:
         "200":
-          description: "Ok"
+          description: "Operação bem sucedida"
           schema:
-            $ref: "#/definitions/Local2"
+            $ref: "#/definitions/GetLocal"
         "400":
           description: "Request inválida"
         "404":
           description: "Local não encontrado"
         "500":
           description: "Erro interno de servidor"
-          
-  /local/{localId}:
     delete:
       tags:
-      - "local"
+      - "Local"
       summary: "Remove um local por Id"
       description: "Remove um local baseado em um Id"
       operationId: "deleteLocal"
@@ -228,8 +255,8 @@ paths:
         description: "Id do local a ser removido"
         required: true
         type: "integer"
-        minimum: 1.0
-        format: "int64"
+        minimum: 1
+        format: "int32"
       responses:
         "201":
           description: "Local removido com sucesso"
@@ -237,13 +264,13 @@ paths:
           description: "Local não encontrado"
         "500":
           description: "Erro interno de servidor"
-          
+  /local/{localId}/qtd:
     put:
       tags:
-      - "local"
-      summary: "Atualiza um local"
+      - "Local"
+      summary: "Atualizar quantidade"
       description: "Atualiza a quantidade de produtos do local"
-      operationId: "updateLocal"
+      operationId: "updateQuantityLocal"
       consumes:
       - "application/json"
       produces:
@@ -253,11 +280,12 @@ paths:
         name: "localId"
         description: "Informações relativas ao local"
         type: "integer"
+        minimum: 1
         required: true
       - in: "body"
         name: "body"
         schema:
-          $ref: "#/definitions/PutLocal"
+          $ref: "#/definitions/PutQuantityLocal"
       responses:
         "200":
           description: "Local atualizado com sucesso"
@@ -265,11 +293,39 @@ paths:
           description: "Id inválido"
         "500":
           description: "Erro interno de servidor"
-          
+  /local/{localId}/loc:
+    put:
+      tags:
+      - "Local"
+      summary: "Atualizar localização"
+      description: "Atualiza a localização de produtos do local"
+      operationId: "updateLocalizationLocal"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "localId"
+        description: "Informações relativas ao local"
+        type: "integer"
+        minimum: 1
+        required: true
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/PutLocalizationLocal"
+      responses:
+        "200":
+          description: "Local atualizado com sucesso"
+        "400":
+          description: "Id inválido"
+        "500":
+          description: "Erro interno de servidor"
   /produto:
     post:
       tags:
-      - "produto"
+      - "Produto"
       summary: "Criar produto"
       description: "Criar um produto"
       operationId: "createProduct"
@@ -291,10 +347,9 @@ paths:
           description: "Request inválida"
         "500":
           description: "Erro interno de servidor"
-          
     get:
       tags:
-      - "produto"
+      - "Produto"
       summary: "Buscar produtos"
       description: "Busca todos os produtos registrados"
       operationId: "getProducts"
@@ -314,307 +369,180 @@ paths:
           description: "Produto não encontrado"
         "500":
           description: "Erro interno de servidor"
-          
-  ### Continua
-  /user/createWithArray:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-          
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-          
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            type: "string"
-          headers:
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-        "400":
-          description: "Invalid username/password supplied"
-          
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-          
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        "400":
-          description: "Invalid username supplied"
-        "404":
-          description: "User not found"
-          
-    put:
-      tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        "400":
-          description: "Invalid user supplied"
-        "404":
-          description: "User not found"
-          
+  ### TODO
+  /produto/{produtoId}:
     delete:
       tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
+      - "Produto"
       responses:
-        "400":
-          description: "Invalid username supplied"
+        "201":
+          description: "Produto removido com sucesso"
         "404":
-          description: "User not found"
-          
-securityDefinitions:
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
-    flow: "implicit"
-    scopes:
-      write:pets: "modify pets in your account"
-      read:pets: "read your pets"
-      
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-    
+          description: "Produto não encontrado"
+        "500":
+          description: "Erro interno de servidor"
+  /produto/{produtoId}/lote:
+    put:
+      tags:
+      - "Produto"
+      responses:
+        "200":
+          description: "Produto atualizado com sucesso"
+        "400":
+          description: "Id inválido"
+        "500":
+          description: "Erro interno de servidor"
+  /produto/{produtoId}/origem:
+    put:
+      tags:
+      - "Produto"
+      responses:
+        "200":
+          description: "Produto atualizado com sucesso"
+        "400":
+          description: "Id inválido"
+        "500":
+          description: "Erro interno de servidor"
+
+
 definitions:
-  Local:
+  PostStock:
     type: "object"
+    required:
+    - "name"
     properties:
-      quantity:
+      quantidade:
         type: "integer"
         format: "int32"
+        minimum: 1
       localizacao:
         type: "string"
-        
-  Local2:
+        maxLength: 50
+
+  GetStock:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        minimum: 1
+      quantidade:
+        type: "integer"
+        format: "int32"
+        minimum: 1
+      localizacao:
+        type: "string"
+        maxLength: 50
+
+  PutQuantityStock:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      quantidade:
+        type: "integer"
+        format: "int32"
+        minimum: 0
+
+  PutLocalizationStock:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      localizacao:
+        type: "string"
+        maxLength: 50
+
+  PostLocal:
+    type: "object"
+    properties:
+      quantidade:
+        type: "integer"
+        format: "int32"
+        minimum: 0
+      localizacao:
+        type: "string"
+        maxLength: 50
+
+  GetLocal:
     type: "object"
     properties:
       id:
         type: "integer"
-        format: "int64"
-      quantity:
+        format: "int32"
+        minimum: 1
+      quantidade:
         type: "integer"
         format: "int32"
+        minimum: 0
       localizacao:
         type: "string"
-        
-  PutLocal:
+        maxLength: 50
+
+  PutQuantityLocal:
     type: "object"
     required:
     - "name"
     properties:
       quantidade:
         type: "integer"
-        format: "int64"
-
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
         format: "int32"
-        description: "User Status"
+        minimum: 0
 
-  stock:
+  PutLocalizationLocal:
     type: "object"
     required:
     - "name"
     properties:
       localizacao:
         type: "string"
-      quantidade:
-        type: "integer"
-        format: "int64"
+        maxLength: 50
 
-  ApiResponse:
+  PostProduto:
     type: "object"
     properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
+      nome:
         type: "string"
-      message:
+        maxLength: 255
+      origem:
         type: "string"
-        
-  PutStock:
-    type: "object"
-    required:
-    - "name"
-    properties:
-      quantidade:
-        type: "integer"
-        format: "int64"
-        
+        maxLength: 255
+      lote:
+        type: "string"
+        maxLength: 20
+      data_fabricacao:
+        type: "string"
+        minLength: 10
+        maxLength: 10
+      data_validade:
+        type: "string"
+        minLength: 10
+        maxLength: 10
+
   GetProduto:
     type: "object"
     properties:
       id:
         type: "integer"
         format: "int32"
+        minimum: 1
       nome:
         type: "string"
+        maxLength: 255
       origem:
         type: "string"
+        maxLength: 255
       lote:
         type: "string"
+        maxLength: 20
       data_fabricacao:
         type: "string"
+        minLength: 10
+        maxLength: 10
       data_validade:
         type: "string"
-  
-  PostProduto:
-    type: "object"
-    properties:
-      nome:
-        type: "string"
-      origem:
-        type: "string"
-      lote:
-        type: "string"
-      data_fabricacao:
-        type: "string"
-      data_validade:
-        type: "string"
+        minLength: 10
+        maxLength: 10
+

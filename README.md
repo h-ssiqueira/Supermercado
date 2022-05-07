@@ -25,11 +25,17 @@ O projeto em si tem o objetivo de controlar o fluxo de mercadorias, sendo desde 
 ## Documentação
 * [APIs](docs/APIs.yaml)
 * [Arquitetura Sistêmica](diagramas/Arquitetura%20sistêmica.pdf)
+![Arquitetura Sistêmica](diagramas/Arquitetura%20sistêmica.png)
 * [Casos de uso](diagramas/Casos%20de%20uso.pdf)
+![Casos de uso](diagramas/Casos%20de%20uso.png)
 * [DER](diagramas/DER.pdf)
+![DER](diagramas/DER.png)
 * [Fluxograma](diagramas/Fluxograma.pdf)
+![Fluxograma](diagramas/Fluxograma.png)
 * [MER](diagramas/MER.pdf)
+![MER](diagramas/MER.png)
 * [MVC](diagramas/MVC.pdf)
+![MVC](diagramas/MVC.png)
 * [Prototipação](UI-UX)
 
 ## Repositórios
