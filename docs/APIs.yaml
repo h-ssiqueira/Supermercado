@@ -23,7 +23,7 @@ paths:
       - "Estoque"
       summary: "Cria um novo registro de estoque"
       description: "Adiciona um novo registro de estoque para o banco de dados"
-      operationId: "addStock"
+      operationId: "createStock"
       consumes:
       - "application/json"
       produces:
@@ -75,6 +75,7 @@ paths:
         required: true
         type: "integer"
         format: "int32"
+        minimum: 1
       responses:
         "200":
           description: "Operação bem sucedida"
@@ -101,6 +102,7 @@ paths:
         required: true
         type: "integer"
         format: "int32"
+        minimum: 1
       responses:
         "201":
           description: "Estoque removido com sucesso"
@@ -128,6 +130,7 @@ paths:
         type: "integer"
         format: "int32"
         required: true
+        minimum: 1
       - in: "body"
         name: "body"
         schema:
@@ -159,6 +162,7 @@ paths:
         type: "integer"
         format: "int32"
         required: true
+        minimum: 1
       - in: "body"
         name: "body"
         schema:
@@ -227,9 +231,11 @@ paths:
       parameters:
       - name: "localId"
         in: "path"
-        description: "ID do local a ser buscado"
+        description: "Id do local a ser buscado"
         required: true
         type: "integer"
+        format: "int32"
+        minimum: 1
       responses:
         "200":
           description: "Operação bem sucedida"
@@ -270,7 +276,7 @@ paths:
       - "Local"
       summary: "Atualizar quantidade"
       description: "Atualiza a quantidade de produtos do local"
-      operationId: "updateQuantityLocal"
+      operationId: "updateQuantityInLocal"
       consumes:
       - "application/json"
       produces:
@@ -299,7 +305,7 @@ paths:
       - "Local"
       summary: "Atualizar localização"
       description: "Atualiza a localização de produtos do local"
-      operationId: "updateLocalizationLocal"
+      operationId: "updateLocalizationInLocal"
       consumes:
       - "application/json"
       produces:
@@ -334,7 +340,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Created user object"
+        description: "Informações relativas ao novo produto"
         required: true
         schema:
           $ref: "#/definitions/PostProduto"
@@ -342,7 +348,7 @@ paths:
         "200":
           description: "Produto criado com sucesso"
           schema:
-            $ref: "#/definitions/GetProduto"
+            $ref: "#/definitions/GetProduct"
         "400":
           description: "Request inválida"
         "500":
@@ -355,36 +361,91 @@ paths:
       operationId: "getProducts"
       produces:
       - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/GetProduto"
       responses:
         "200":
           description: "Produtos encontrados"
+          schema:
+            $ref: "#/definitions/GetProduct"
         "404":
           description: "Produto não encontrado"
         "500":
           description: "Erro interno de servidor"
-  ### TODO
-  /produto/{produtoId}:
+  /produto/{productId}:
+    get:
+      tags:
+      - "Produto"
+      summary: "Busca produto por id"
+      description: "Busca um produto com base no id"
+      operationId: "getProductById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Id do produto a ser buscado"
+        required: true
+        type: "integer"
+        format: "int32"
+        minimum: 1
+      responses:
+        "200":
+          description: "Operação bem sucedida"
+          schema:
+            $ref: "#/definitions/GetProduct"
+        "400":
+          description: "Request inválida"
+        "404":
+          description: "Produto não encontrado"
+        "500":
+          description: "Erro interno de servidor"
     delete:
       tags:
       - "Produto"
+      summary: "Remove um produto"
+      description: "Remove um registro de produto com base em um Id fornecido."
+      operationId: "deleteProduct"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Id do produto a ser removido"
+        required: true
+        type: "integer"
+        format: "int32"
+        minimum: 1
       responses:
         "201":
           description: "Produto removido com sucesso"
+        "400":
+          description: "Id inválido"
         "404":
           description: "Produto não encontrado"
         "500":
           description: "Erro interno de servidor"
-  /produto/{produtoId}/lote:
+  /produto/{productId}/lote:
     put:
       tags:
       - "Produto"
+      summary: "Atualizar lote de produto"
+      description: "Atualiza o lote de um produto com base em um Id fornecido."
+      operationId: "updateLotInProduct"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Id do produto a ser atualizado"
+        required: true
+        type: "integer"
+        format: "int32"
+        minimum: 1
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/PutLotProduct"
       responses:
         "200":
           description: "Produto atualizado com sucesso"
@@ -392,10 +453,29 @@ paths:
           description: "Id inválido"
         "500":
           description: "Erro interno de servidor"
-  /produto/{produtoId}/origem:
+  /produto/{productId}/origem:
     put:
       tags:
       - "Produto"
+      summary: "Atualizar origem de produto"
+      description: "Atualiza a origem de um produto com base em um Id fornecido."
+      operationId: "updateOriginInProduct"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Id do produto a ser atualizado"
+        required: true
+        type: "integer"
+        format: "int32"
+        minimum: 1
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/PutOriginProduct"
       responses:
         "200":
           description: "Produto atualizado com sucesso"
@@ -514,14 +594,12 @@ definitions:
         maxLength: 20
       data_fabricacao:
         type: "string"
-        minLength: 10
-        maxLength: 10
+        format: "date"
       data_validade:
         type: "string"
-        minLength: 10
-        maxLength: 10
+        format: "date"
 
-  GetProduto:
+  GetProduct:
     type: "object"
     properties:
       id:
@@ -539,10 +617,21 @@ definitions:
         maxLength: 20
       data_fabricacao:
         type: "string"
-        minLength: 10
-        maxLength: 10
+        format: "date"
       data_validade:
         type: "string"
-        minLength: 10
-        maxLength: 10
+        format: "date"
 
+  PutLotProduct:
+    type: "object"
+    properties:
+      lote:
+        type: "string"
+        maxLength: 20
+
+  PutOriginProduct:
+    type: "object"
+    properties:
+      origem:
+        type: "string"
+        maxLength: 255
