@@ -104,7 +104,7 @@ paths:
         format: "int32"
         minimum: 1
       responses:
-        "201":
+        "200":
           description: "Estoque removido com sucesso"
         "400":
           description: "Id inválido"
@@ -136,7 +136,7 @@ paths:
         schema:
           $ref: "#/definitions/PutQuantityStock"
       responses:
-        "201":
+        "200":
           description: "Estoque atualizado com sucesso"
         "400":
           description: "Id inválido"
@@ -168,7 +168,7 @@ paths:
         schema:
           $ref: "#/definitions/PutLocalizationStock"
       responses:
-        "201":
+        "200":
           description: "Estoque atualizado com sucesso"
         "400":
           description: "Id inválido"
@@ -197,8 +197,8 @@ paths:
           description: "Local criado com sucesso"
           schema:
             $ref: "#/definitions/GetLocal"
-        "400":
-          description: "Request inválido"
+        "404":
+          description: "Local não encontrado"
         "500":
           description: "Erro interno de servidor"
     get:
@@ -264,8 +264,10 @@ paths:
         minimum: 1
         format: "int32"
       responses:
-        "201":
+        "200":
           description: "Local removido com sucesso"
+        "400":
+          description: "Id inválido"
         "404":
           description: "Local não encontrado"
         "500":
@@ -297,6 +299,8 @@ paths:
           description: "Local atualizado com sucesso"
         "400":
           description: "Id inválido"
+        "404":
+          description: "Local não encontrado"
         "500":
           description: "Erro interno de servidor"
   /local/{localId}/loc:
@@ -326,6 +330,8 @@ paths:
           description: "Local atualizado com sucesso"
         "400":
           description: "Id inválido"
+        "404":
+          description: "Local não encontrado"
         "500":
           description: "Erro interno de servidor"
   /produto:
@@ -345,7 +351,7 @@ paths:
         schema:
           $ref: "#/definitions/PostProduto"
       responses:
-        "200":
+        "201":
           description: "Produto criado com sucesso"
           schema:
             $ref: "#/definitions/GetProduct"
@@ -363,7 +369,7 @@ paths:
       - "application/json"
       responses:
         "200":
-          description: "Produtos encontrados"
+          description: "Operação bem sucedida"
           schema:
             $ref: "#/definitions/GetProduct"
         "404":
@@ -415,7 +421,7 @@ paths:
         format: "int32"
         minimum: 1
       responses:
-        "201":
+        "200":
           description: "Produto removido com sucesso"
         "400":
           description: "Id inválido"
@@ -451,6 +457,8 @@ paths:
           description: "Produto atualizado com sucesso"
         "400":
           description: "Id inválido"
+        "404":
+          description: "Produto não encontrado"
         "500":
           description: "Erro interno de servidor"
   /produto/{productId}/origem:
@@ -481,6 +489,40 @@ paths:
           description: "Produto atualizado com sucesso"
         "400":
           description: "Id inválido"
+        "404":
+          description: "Produto não encontrado"
+        "500":
+          description: "Erro interno de servidor"
+  /produto/{productId}/nome:
+    put:
+      tags:
+      - "Produto"
+      summary: "Atualizar nome de produto"
+      description: "Atualiza o nome de um produto com base em um Id fornecido."
+      operationId: "updateNameInProduct"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "Id do produto a ser atualizado"
+        required: true
+        type: "integer"
+        format: "int32"
+        minimum: 1
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/PutNameProduct"
+      responses:
+        "200":
+          description: "Produto atualizado com sucesso"
+        "400":
+          description: "Id inválido"
+        "404":
+          description: "Produto não encontrado"
         "500":
           description: "Erro interno de servidor"
 
@@ -633,5 +675,12 @@ definitions:
     type: "object"
     properties:
       origem:
+        type: "string"
+        maxLength: 255
+
+  PutNameProduct:
+    type: "object"
+    properties:
+      nome:
         type: "string"
         maxLength: 255
