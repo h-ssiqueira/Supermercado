@@ -87,31 +87,6 @@ paths:
           description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
-    delete:
-      tags:
-      - "Estoque"
-      summary: "Remove um estoque"
-      description: "Remove um registro de estoque com base em um Id"
-      operationId: "deleteStock"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "stockId"
-        in: "path"
-        description: "Id do estoque a ser removido"
-        required: true
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      responses:
-        "200":
-          description: "Estoque removido com sucesso"
-        "400":
-          description: "Id inválido"
-        "404":
-          description: "Estoque não encontrado"
-        "500":
-          description: "Erro interno de servidor"
   /estoque/{stockId}/qtd:
     put:
       tags:
@@ -247,31 +222,6 @@ paths:
           description: "Local não encontrado"
         "500":
           description: "Erro interno de servidor"
-    delete:
-      tags:
-      - "Local"
-      summary: "Remove um local por Id"
-      description: "Remove um local baseado em um Id"
-      operationId: "deleteLocal"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "localId"
-        in: "path"
-        description: "Id do local a ser removido"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int32"
-      responses:
-        "200":
-          description: "Local removido com sucesso"
-        "400":
-          description: "Id inválido"
-        "404":
-          description: "Local não encontrado"
-        "500":
-          description: "Erro interno de servidor"
   /local/{localId}/qtd:
     put:
       tags:
@@ -400,31 +350,6 @@ paths:
             $ref: "#/definitions/GetProduct"
         "400":
           description: "Request inválida"
-        "404":
-          description: "Produto não encontrado"
-        "500":
-          description: "Erro interno de servidor"
-    delete:
-      tags:
-      - "Produto"
-      summary: "Remove um produto"
-      description: "Remove um registro de produto com base em um Id fornecido."
-      operationId: "deleteProduct"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "productId"
-        in: "path"
-        description: "Id do produto a ser removido"
-        required: true
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      responses:
-        "200":
-          description: "Produto removido com sucesso"
-        "400":
-          description: "Id inválido"
         "404":
           description: "Produto não encontrado"
         "500":
