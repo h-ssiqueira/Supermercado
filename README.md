@@ -24,6 +24,7 @@ O projeto em si tem o objetivo de controlar o fluxo de mercadorias, sendo desde 
 
 ## Documentação
 * [APIs](docs/APIs.yaml)
+* [APIs Postman](docs/Postman.json)
 * [Arquitetura Sistêmica](diagramas/Arquitetura%20sistêmica.pdf)
 
 ![Arquitetura Sistêmica](diagramas/Arquitetura%20sistêmica.png)
