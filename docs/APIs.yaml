@@ -71,6 +71,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
+        required: true
         schema:
           $ref: "#/definitions/Stock"
       responses:
@@ -113,7 +114,6 @@ paths:
       description: "Retorna todos os locais registrados no sistema"
       produces:
       - "application/json"
-      parameters: []
       responses:
         "200":
           description: "Operação bem sucedida"
@@ -135,6 +135,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
+        required: true
         schema:
           $ref: "#/definitions/Local"
       responses:
@@ -255,7 +256,7 @@ definitions:
         minimum: 0
       lote:
         type: "string"
-        maxLength: 20
+        maxLength: 255
       data_fabricacao:
         type: "string"
         format: "date"
