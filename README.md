@@ -56,6 +56,37 @@ O projeto em si tem o objetivo de controlar o fluxo de mercadorias, sendo desde 
 * [Aplicativo](https://github.com/RichardCLopes/QRCode_Reader)
 * [Sistemas Web](https://github.com/alcidesbeato/Sistema-web-Almoxarifado)
 
+## Instalação e Configuração
+
+### Requisitos
+- RabbitMQ
+- NodeJs
+- Firebase
+
+### Passo a passo
+
+#### Iniciar RabbitMQ com Docker
+```
+sudo docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
+```
+
+#### Iniciar Aplicações WEB
+```
+npm install
+npm start
+```
+
+#### Iniciar Aplicações do Back-end
+```
+npm install
+npm start
+```
+
+#### Iniciar aplicativo
+```
+Flask run
+```
+
 ## Autores
 [Alcides Gomes Beato Neto](https://github.com/alcidesbeato)
 
