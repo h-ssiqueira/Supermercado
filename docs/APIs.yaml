@@ -23,7 +23,6 @@ paths:
       - "Estoque"
       summary: "Cria um novo registro de estoque"
       description: "Adiciona um novo registro de estoque para o banco de dados"
-      operationId: "createStock"
       consumes:
       - "application/json"
       produces:
@@ -33,10 +32,12 @@ paths:
         name: "body"
         required: true
         schema:
-          $ref: "#/definitions/PostStock"
+          $ref: "#/definitions/Stock"
       responses:
         "201":
           description: "Registro criado"
+          schema:
+            $ref: "#/definitions/Stock"
         "400":
           description: "Entrada inválida"
         "500":
@@ -46,7 +47,6 @@ paths:
       - "Estoque"
       summary: "Buscar todo o estoque"
       description: "Busca todas as informações do estoque interno"
-      operationId: "findStocks"
       produces:
       - "application/json"
       responses:
@@ -54,62 +54,25 @@ paths:
           description: "Operação bem sucedida"
           schema:
             items:
-              $ref: "#/definitions/GetStock"
+              $ref: "#/definitions/Stock"
         "404":
           description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
-  /estoque/{stockId}:
-    get:
-      tags:
-      - "Estoque"
-      summary: "Busca estoque por Id"
-      description: "Retorna um único registro de estoque"
-      operationId: "getStockById"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "stockId"
-        in: "path"
-        description: "Id do estoque para buscar"
-        required: true
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      responses:
-        "200":
-          description: "Operação bem sucedida"
-          schema:
-            $ref: "#/definitions/GetStock"
-        "400":
-          description: "Id inválido"
-        "404":
-          description: "Estoque não encontrado"
-        "500":
-          description: "Erro interno de servidor"
-  /estoque/{stockId}/qtd:
     put:
       tags:
       - "Estoque"
       summary: "Atualizar quantidade"
       description: "Atualiza a quantidade de produtos do estoque"
-      operationId: "updateQuantityInStock"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - in: "path"
-        name: "stockId"
-        description: "Informações relativas ao estoque"
-        type: "integer"
-        format: "int32"
-        required: true
-        minimum: 1
       - in: "body"
         name: "body"
         schema:
-          $ref: "#/definitions/PutQuantityStock"
+          $ref: "#/definitions/Stock"
       responses:
         "200":
           description: "Estoque atualizado com sucesso"
@@ -119,45 +82,12 @@ paths:
           description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
-  /estoque/{stockId}/loc:
-    put:
-      tags:
-      - "Estoque"
-      summary: "Atualizar localização"
-      description: "Atualiza a localização de produtos do estoque"
-      operationId: "updateLocalizationInStock"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "stockId"
-        description: "Informações relativas ao estoque"
-        type: "integer"
-        format: "int32"
-        required: true
-        minimum: 1
-      - in: "body"
-        name: "body"
-        schema:
-          $ref: "#/definitions/PutLocalizationStock"
-      responses:
-        "200":
-          description: "Estoque atualizado com sucesso"
-        "400":
-          description: "Id inválido"
-        "404":
-          description: "Estoque não encontrado"
-        "500":
-          description: "Erro interno de servidor"
-  /local/:
+  /local:
     post:
       tags:
       - "Local"
       summary: "Cria local"
       description: "Cria um novo registro de local"
-      operationId: "createLocal"
       produces:
       - "application/json"
       parameters:
@@ -166,12 +96,12 @@ paths:
         description: "Informações do local"
         required: true
         schema:
-          $ref: "#/definitions/PostLocal"
+          $ref: "#/definitions/Local"
       responses:
         "201":
           description: "Local criado com sucesso"
           schema:
-            $ref: "#/definitions/GetLocal"
+            $ref: "#/definitions/Local"
         "404":
           description: "Local não encontrado"
         "500":
@@ -181,7 +111,6 @@ paths:
       - "Local"
       summary: "Retorna todos os locais"
       description: "Retorna todos os locais registrados no sistema"
-      operationId: "getLocals"
       produces:
       - "application/json"
       parameters: []
@@ -189,61 +118,25 @@ paths:
         "200":
           description: "Operação bem sucedida"
           schema:
-            $ref: "#/definitions/GetLocal"
+            $ref: "#/definitions/Local"
         "400":
           description: "Id inválido"
         "500":
           description: "Erro interno de servidor"
-  /local/{localId}:
-    get:
-      tags:
-      - "Local"
-      summary: "Busca local por id"
-      description: "Busca um local com base no id"
-      operationId: "getLocalById"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "localId"
-        in: "path"
-        description: "Id do local a ser buscado"
-        required: true
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      responses:
-        "200":
-          description: "Operação bem sucedida"
-          schema:
-            $ref: "#/definitions/GetLocal"
-        "400":
-          description: "Request inválida"
-        "404":
-          description: "Local não encontrado"
-        "500":
-          description: "Erro interno de servidor"
-  /local/{localId}/qtd:
     put:
       tags:
       - "Local"
-      summary: "Atualizar quantidade"
+      summary: "Atualizar estoque"
       description: "Atualiza a quantidade de produtos do local"
-      operationId: "updateQuantityInLocal"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - in: "path"
-        name: "localId"
-        description: "Informações relativas ao local"
-        type: "integer"
-        minimum: 1
-        required: true
       - in: "body"
         name: "body"
         schema:
-          $ref: "#/definitions/PutQuantityLocal"
+          $ref: "#/definitions/Local"
       responses:
         "200":
           description: "Local atualizado com sucesso"
@@ -253,44 +146,12 @@ paths:
           description: "Local não encontrado"
         "500":
           description: "Erro interno de servidor"
-  /local/{localId}/loc:
-    put:
-      tags:
-      - "Local"
-      summary: "Atualizar localização"
-      description: "Atualiza a localização de produtos do local"
-      operationId: "updateLocalizationInLocal"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "localId"
-        description: "Informações relativas ao local"
-        type: "integer"
-        minimum: 1
-        required: true
-      - in: "body"
-        name: "body"
-        schema:
-          $ref: "#/definitions/PutLocalizationLocal"
-      responses:
-        "200":
-          description: "Local atualizado com sucesso"
-        "400":
-          description: "Id inválido"
-        "404":
-          description: "Local não encontrado"
-        "500":
-          description: "Erro interno de servidor"
-  /produto:
+  /produtos:
     post:
       tags:
       - "Produto"
       summary: "Criar produto"
       description: "Criar um produto"
-      operationId: "createProduct"
       produces:
       - "application/json"
       parameters:
@@ -299,12 +160,12 @@ paths:
         description: "Informações relativas ao novo produto"
         required: true
         schema:
-          $ref: "#/definitions/PostProduto"
+          $ref: "#/definitions/Produto"
       responses:
         "201":
           description: "Produto criado com sucesso"
           schema:
-            $ref: "#/definitions/GetProduct"
+            $ref: "#/definitions/Produto"
         "400":
           description: "Request inválida"
         "500":
@@ -314,248 +175,84 @@ paths:
       - "Produto"
       summary: "Buscar produtos"
       description: "Busca todos os produtos registrados"
-      operationId: "getProducts"
       produces:
       - "application/json"
       responses:
         "200":
           description: "Operação bem sucedida"
           schema:
-            $ref: "#/definitions/GetProduct"
+            $ref: "#/definitions/Produto"
         "404":
           description: "Produto não encontrado"
         "500":
           description: "Erro interno de servidor"
-  /produto/{productId}:
-    get:
+    put:
       tags:
       - "Produto"
-      summary: "Busca produto por id"
-      description: "Busca um produto com base no id"
-      operationId: "getProductById"
+      summary: "Atualiza um produto"
+      description: "Atualiza um produto com base no id"
       produces:
       - "application/json"
       parameters:
-      - name: "productId"
-        in: "path"
-        description: "Id do produto a ser buscado"
+      - in: "body"
+        name: "body"
+        description: "Informações relativas ao produto"
         required: true
-        type: "integer"
-        format: "int32"
-        minimum: 1
+        schema:
+          $ref: "#/definitions/Produto"
       responses:
         "200":
           description: "Operação bem sucedida"
-          schema:
-            $ref: "#/definitions/GetProduct"
         "400":
           description: "Request inválida"
         "404":
           description: "Produto não encontrado"
         "500":
           description: "Erro interno de servidor"
-  /produto/{productId}/lote:
-    put:
-      tags:
-      - "Produto"
-      summary: "Atualizar lote de produto"
-      description: "Atualiza o lote de um produto com base em um Id fornecido."
-      operationId: "updateLotInProduct"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "productId"
-        in: "path"
-        description: "Id do produto a ser atualizado"
-        required: true
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      - in: "body"
-        name: "body"
-        schema:
-          $ref: "#/definitions/PutLotProduct"
-      responses:
-        "200":
-          description: "Produto atualizado com sucesso"
-        "400":
-          description: "Id inválido"
-        "404":
-          description: "Produto não encontrado"
-        "500":
-          description: "Erro interno de servidor"
-  /produto/{productId}/origem:
-    put:
-      tags:
-      - "Produto"
-      summary: "Atualizar origem de produto"
-      description: "Atualiza a origem de um produto com base em um Id fornecido."
-      operationId: "updateOriginInProduct"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "productId"
-        in: "path"
-        description: "Id do produto a ser atualizado"
-        required: true
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      - in: "body"
-        name: "body"
-        schema:
-          $ref: "#/definitions/PutOriginProduct"
-      responses:
-        "200":
-          description: "Produto atualizado com sucesso"
-        "400":
-          description: "Id inválido"
-        "404":
-          description: "Produto não encontrado"
-        "500":
-          description: "Erro interno de servidor"
-  /produto/{productId}/nome:
-    put:
-      tags:
-      - "Produto"
-      summary: "Atualizar nome de produto"
-      description: "Atualiza o nome de um produto com base em um Id fornecido."
-      operationId: "updateNameInProduct"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "productId"
-        in: "path"
-        description: "Id do produto a ser atualizado"
-        required: true
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      - in: "body"
-        name: "body"
-        schema:
-          $ref: "#/definitions/PutNameProduct"
-      responses:
-        "200":
-          description: "Produto atualizado com sucesso"
-        "400":
-          description: "Id inválido"
-        "404":
-          description: "Produto não encontrado"
-        "500":
-          description: "Erro interno de servidor"
-
 
 definitions:
-  PostStock:
-    type: "object"
-    required:
-    - "name"
-    properties:
-      quantidade:
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      localizacao:
-        type: "string"
-        maxLength: 50
-
-  GetStock:
+  Stock:
     type: "object"
     required:
     - "name"
     properties:
       id:
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      quantidade:
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      localizacao:
         type: "string"
-        maxLength: 50
-
-  PutQuantityStock:
-    type: "object"
-    required:
-    - "name"
-    properties:
+        maxLength: 255
       quantidade:
         type: "integer"
         format: "int32"
         minimum: 0
-
-  PutLocalizationStock:
-    type: "object"
-    required:
-    - "name"
-    properties:
-      localizacao:
-        type: "string"
-        maxLength: 50
-
-  PostLocal:
-    type: "object"
-    properties:
-      quantidade:
-        type: "integer"
-        format: "int32"
-        minimum: 0
-      localizacao:
-        type: "string"
-        maxLength: 50
-
-  GetLocal:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      quantidade:
-        type: "integer"
-        format: "int32"
-        minimum: 0
-      localizacao:
-        type: "string"
-        maxLength: 50
-
-  PutQuantityLocal:
-    type: "object"
-    required:
-    - "name"
-    properties:
-      quantidade:
-        type: "integer"
-        format: "int32"
-        minimum: 0
-
-  PutLocalizationLocal:
-    type: "object"
-    required:
-    - "name"
-    properties:
-      localizacao:
-        type: "string"
-        maxLength: 50
-
-  PostProduto:
-    type: "object"
-    properties:
       nome:
         type: "string"
         maxLength: 255
-      origem:
+
+  Local:
+    type: "object"
+    properties:
+      id:
         type: "string"
         maxLength: 255
+      quantidade:
+        type: "integer"
+        format: "int32"
+        minimum: 0
+      nome:
+        type: "string"
+        maxLength: 255
+
+  Produto:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        maxLength: 255
+      nome:
+        type: "string"
+        maxLength: 255
+      quantidade:
+        type: "integer"
+        minimum: 0
       lote:
         type: "string"
         maxLength: 20
@@ -565,47 +262,3 @@ definitions:
       data_validade:
         type: "string"
         format: "date"
-
-  GetProduct:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int32"
-        minimum: 1
-      nome:
-        type: "string"
-        maxLength: 255
-      origem:
-        type: "string"
-        maxLength: 255
-      lote:
-        type: "string"
-        maxLength: 20
-      data_fabricacao:
-        type: "string"
-        format: "date"
-      data_validade:
-        type: "string"
-        format: "date"
-
-  PutLotProduct:
-    type: "object"
-    properties:
-      lote:
-        type: "string"
-        maxLength: 20
-
-  PutOriginProduct:
-    type: "object"
-    properties:
-      origem:
-        type: "string"
-        maxLength: 255
-
-  PutNameProduct:
-    type: "object"
-    properties:
-      nome:
-        type: "string"
-        maxLength: 255
