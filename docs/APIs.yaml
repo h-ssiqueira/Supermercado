@@ -83,6 +83,31 @@ paths:
           description: "Estoque não encontrado"
         "500":
           description: "Erro interno de servidor"
+  /estoque/deposito:
+    put:
+      tags:
+      - "Estoque"
+      summary: "Atualizar quantidade"
+      description: "Atualiza a quantidade de produtos do estoque"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Stock"
+      responses:
+        "200":
+          description: "Estoque atualizado com sucesso"
+        "400":
+          description: "Id inválido"
+        "404":
+          description: "Estoque não encontrado"
+        "500":
+          description: "Erro interno de servidor"
   /local:
     post:
       tags:
@@ -123,6 +148,31 @@ paths:
           description: "Id inválido"
         "500":
           description: "Erro interno de servidor"
+    put:
+      tags:
+      - "Local"
+      summary: "Atualizar estoque"
+      description: "Atualiza a quantidade de produtos do local"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Local"
+      responses:
+        "200":
+          description: "Local atualizado com sucesso"
+        "400":
+          description: "Id inválido"
+        "404":
+          description: "Local não encontrado"
+        "500":
+          description: "Erro interno de servidor"
+  /local/caixa:
     put:
       tags:
       - "Local"
