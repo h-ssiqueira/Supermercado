@@ -82,9 +82,23 @@ npm install
 npm start
 ```
 
-#### Iniciar aplicativo
+#### Iniciar aplicativo Android
 ```
-Flask run
+flutter run
+
+## Para Executar a API flask
+cd API
+## Para Linux
+export FLASK_APP=api.py
+flask run --host=10.42.0.1
+## O host deve ser seu Gateway  
+
+## Para PowerSehll no Windows
+$env:FLASK_APP = "api.py"
+py -m flask run --host=192.168.137.1
+## O host deve ser seu Gateway
+
+## Em Ambos, o Desktop foi Hotspot WiFi
 ```
 
 ## Autores
